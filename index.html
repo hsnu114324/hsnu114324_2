@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="德文方塊" />
+    <meta name="theme-color" content="#0f1222" />
+    <title>德文單字俄羅斯方塊</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="top-info">
+        <div class="meta">
+          <span class="score-chip">分數：<b id="score">0</b></span>
+          <span class="progress-chip">進度：<b id="progress">0/0</b></span>
+          <div class="meta-actions">
+            <button id="autoBtn" type="button" onclick="toggleAutoMode()">自動</button>
+            <a class="btn-link" href="./settings.html">⚙ 設定</a>
+            <button id="restartBtn" type="button">重新開始</button>
+          </div>
+        </div>
+        <p id="message" class="message"></p>
+        <pre id="debugBox" class="debug-box"></pre>
+      </header>
+
+      <section class="board-wrap">
+        <canvas id="board"></canvas>
+      </section>
+    </main>
+
+    <nav class="mobile-controls" aria-label="遊戲控制">
+      <button id="leftBtn" type="button" aria-label="向左">←</button>
+      <button id="downBtn" type="button" aria-label="直接落地">▼</button>
+      <button id="rightBtn" type="button" aria-label="向右">→</button>
+    </nav>
+
+    <script src="./data/words.js"></script>
+    <script src="./shared.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

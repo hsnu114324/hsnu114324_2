@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0f1222" />
+    <title>德文方塊：字庫設定</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <main class="settings-page">
+      <section class="card">
+        <h1>字庫設定 <span class="version-tag">德文單字卡版</span></h1>
+        <p>字庫來自你的德文單字卡（Goethe B1 + 德語詞彙聯想與速記）。格式：每列用逗號分隔，2~5 欄。</p>
+        <p id="message" class="message"></p>
+
+        <div class="pick-section">
+          <label class="pick-label">
+            每局隨機抽取
+            <input id="pickCount" type="number" min="0" step="1" value="0" />
+            組（共 <b id="totalCount">0</b> 組，0 = 全部）
+          </label>
+        </div>
+
+        <div class="pick-section" style="text-align:center;">
+          <button type="button" id="singleWordModeBtn"
+            style="width:100%;padding:14px 0;font-size:1.05rem;font-weight:700;
+                   border:2px solid #666;border-radius:10px;
+                   background:#2a2a2a;color:#ccc;cursor:pointer;
+                   transition:background 0.15s,box-shadow 0.2s,color 0.15s,border-color 0.15s,transform 0.1s;">
+            🔤 單字模式（拼出德文單字）
+          </button>
+          <p id="singleWordModeHint" style="margin:6px 0 0;font-size:0.78rem;color:#999;display:none;">
+            一次只發一組單字：中文提示塊放最左，德文拆塊依序排右邊，拼對消去後才發下一組。
+          </p>
+          <div id="letterSubgroupBar" style="display:none;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:center;"></div>
+          <div id="splitModeBar" style="display:flex;gap:6px;margin-top:10px;justify-content:center;">
+            <button type="button" class="split-mode-btn" data-split="syllable"
+              style="flex:1;padding:9px 0;font-size:0.85rem;font-weight:600;
+                     border:2px solid #666;border-radius:8px;
+                     background:#2a2a2a;color:#ccc;cursor:pointer;
+                     transition:background 0.15s,box-shadow 0.2s,color 0.15s,border-color 0.15s;">
+              音節拆分
+            </button>
+            <button type="button" class="split-mode-btn" data-split="random"
+              style="flex:1;padding:9px 0;font-size:0.85rem;font-weight:600;
+                     border:2px solid #666;border-radius:8px;
+                     background:#2a2a2a;color:#ccc;cursor:pointer;
+                     transition:background 0.15s,box-shadow 0.2s,color 0.15s,border-color 0.15s;">
+              隨機拆分
+            </button>
+            <button type="button" class="split-mode-btn" data-split="mixed"
+              style="flex:1;padding:9px 0;font-size:0.85rem;font-weight:600;
+                     border:2px solid #666;border-radius:8px;
+                     background:#2a2a2a;color:#ccc;cursor:pointer;
+                     transition:background 0.15s,box-shadow 0.2s,color 0.15s,border-color 0.15s;">
+              混合
+            </button>
+            <button type="button" class="split-mode-btn" data-split="letter"
+              style="flex:1;padding:9px 0;font-size:0.85rem;font-weight:600;
+                     border:2px solid #666;border-radius:8px;
+                     background:#2a2a2a;color:#ccc;cursor:pointer;
+                     transition:background 0.15s,box-shadow 0.2s,color 0.15s,border-color 0.15s;">
+              逐字母
+            </button>
+          </div>
+        </div>
+
+        <div id="lenSection" class="pick-section">
+          <p class="pick-label" style="margin-bottom:6px;font-weight:bold;">允許的組合長度</p>
+          <label class="pick-label" style="display:block;padding:10px 0;"><input id="len2Toggle" type="checkbox" checked style="width:20px;height:20px;vertical-align:middle;margin-right:8px;" /> 2 格（中文＋德文）</label>
+          <label class="pick-label" style="display:block;padding:10px 0;"><input id="len3Toggle" type="checkbox" checked style="width:20px;height:20px;vertical-align:middle;margin-right:8px;" /> 3 格（提示＋冠詞＋名詞）</label>
+          <label class="pick-label" style="display:block;padding:10px 0;"><input id="len4Toggle" type="checkbox" checked style="width:20px;height:20px;vertical-align:middle;margin-right:8px;" /> 4 格（提示＋冠詞＋形容詞＋名詞）</label>
+          <label class="pick-label" style="display:block;padding:10px 0;"><input id="len5Toggle" type="checkbox" checked style="width:20px;height:20px;vertical-align:middle;margin-right:8px;" /> 5 格</label>
+        </div>
+
+        <div id="sourceSection" class="pick-section">
+          <p class="pick-label" style="margin-bottom:6px;font-weight:bold;">單字來源（可同時啟用多個）</p>
+          <div id="groupBtnBar" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+            <button type="button" class="group-btn" data-group="0">B1 單字</button>
+            <button type="button" class="group-btn" data-group="1">速記單字</button>
+            <button type="button" class="group-btn" data-group="2">名詞詞性</button>
+            <button type="button" class="group-btn" data-group="3">冠詞＋名詞</button>
+            <button type="button" class="group-btn" data-group="4">形容詞變化</button>
+            <button type="button" class="group-btn" id="customSourceBtn">自定義</button>
+          </div>
+          <div id="groupCatBars"></div>
+        </div>
+
+        <div class="pick-section">
+          <label class="pick-label">
+            <input id="autoRemoveToggle" type="checkbox" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;" />
+            自動移除模式（消去的組合自動從字庫移除，適合背單字）
+          </label>
+        </div>
+
+        <div class="pick-section" style="display:none;">
+          <label class="pick-label">
+            <input id="battleModeToggle" type="checkbox" />
+            ⚔️ 勇者戰鬥模式
+          </label>
+        </div>
+
+        <div class="pick-section">
+          <label class="pick-label">
+            <input id="debugToggle" type="checkbox" />
+            啟用偵錯模式
+          </label>
+          <div id="debugPoolStatus" style="display:none;margin-top:8px;padding:8px 12px;background:#1a1a2e;border:1px solid #444;border-radius:6px;font-size:0.8rem;color:#aaa;font-family:monospace;"></div>
+        </div>
+
+        <div class="pick-section">
+          <p class="pick-label" style="margin-bottom:6px;font-weight:bold;">📊 學習統計（Google Sheets 同步，選用）</p>
+          <div id="googleAuthArea" style="margin-bottom:10px;">
+            <div id="googleSignInBtn"></div>
+            <div id="googleUserInfo" style="display:none;align-items:center;gap:10px;padding:8px 12px;background:#e8f5e9;border-radius:8px;">
+              <img id="googleUserAvatar" alt="" style="width:28px;height:28px;border-radius:50%;" />
+              <span id="googleUserName" style="font-size:14px;font-weight:500;color:#222;"></span>
+              <button id="googleSignOutBtn" type="button" style="margin-left:auto;font-size:12px;padding:4px 10px;">登出</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+            <button id="viewStatsBtn" type="button">查看失敗率排行</button>
+            <button id="loadFailedBtn" type="button">立即載入</button>
+            <button id="clearStatsBtn" type="button" class="danger">清除統計</button>
+          </div>
+          <div id="statsDisplay" style="display:none;margin-top:8px;max-height:300px;overflow-y:auto;font-size:13px;background:#f9f9f9;border-radius:8px;padding:10px;color:#222;"></div>
+          <div id="failedWordsArea" style="display:none;margin-top:12px;"></div>
+        </div>
+
+        <div class="actions">
+          <button id="saveBtn" type="button">儲存</button>
+          <button id="resetBtn" type="button">還原預設</button>
+          <a class="btn-link" href="./index.html">🧱 回遊戲</a>
+        </div>
+
+        <hr style="margin:16px 0;border:none;border-top:1px solid #3f4b89;" />
+
+        <div id="customInputArea" class="input-group" style="display:none;">
+          <input
+            id="newRowInput"
+            type="text"
+            placeholder="輸入新列，例如：蘋果,der Apfel"
+          />
+          <button id="addBtn" type="button">新增</button>
+        </div>
+
+        <div id="rowList" class="row-list"></div>
+      </section>
+    </main>
+
+    <script src="./data/words.js"></script>
+    <script src="./shared.js"></script>
+    <script src="./settings.js"></script>
+  </body>
+</html>
